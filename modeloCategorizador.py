@@ -1,5 +1,23 @@
 import cv2
 from ultralytics import YOLO
+import subprocess
+
+def execute_curl_request(signal):
+    # La cadena original con "plastic"
+    curl_command = '''curl -X POST http://192.168.4.1/sort \
+-H "X-Request-ID: 12345" \
+-H "Content-Type: application/json" \
+-H "Content-Length: 33" \
+-d '{"data": {"grupo": "plastic"}}' '''
+    
+    # Reemplazar "plastic" por el valor de "signal"
+    modified_command = curl_command.replace("plastic", signal)
+    
+    # Ejecutar el comando modificado usando subprocess
+    subprocess.run(modified_command, shell=True, check=True)
+
+
+
 
 # Carga el modelo entrenado
 model = YOLO('modelo/modeloYOLO.pt')
@@ -38,7 +56,14 @@ while True:
         detection_info = f"Clase: {class_name}, Confianza: {confidence:.2f}, Coordenadas: ({x1:.0f}, {y1:.0f}, {x2:.0f}, {y2:.0f})"
 
         # Imprime la información de la detección
+        print(f"********* {type(detection_info)} ***************")
         print(detection_info)
+
+        
+
+        # Ejemplo de uso
+        #signal_value = "bio"  # Puedes cambiar esto a cualquier valor que desees
+        #execute_curl_request(signal_value)
 
         # Opcional: Dibujar la caja y la etiqueta en el fotograma
         cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
